@@ -1,0 +1,22 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="784" measuredH="485" mockupW="450" mockupH="400">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::TitleWindow" x="334" y="85" w="-1" h="-1" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bottomheight>0</bottomheight>
+        <close>true</close>
+        <text>Module%20Configuration</text>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::StickyNote" x="374" y="129" w="370" h="195" measuredW="109" measuredH="123" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>40</size>
+        <text>Here%20will%20be%20displayed%20the%20form%20to%20fill</text>
+      </controlProperties>
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::Button" x="687" y="447" w="88" h="27" measuredW="40" measuredH="27" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Ok</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>

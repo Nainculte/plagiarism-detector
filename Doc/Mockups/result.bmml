@@ -1,0 +1,33 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1109" measuredH="634" mockupW="1069" mockupH="610">
+  <controls>
+    <control controlID="0" controlTypeID="__group__" x="40" y="24" w="1069" h="610" measuredW="1069" measuredH="610" zOrder="0" locked="false" isInGroup="-1">
+      <groupChildrenDescriptors>
+        <control controlID="0" controlTypeID="com.balsamiq.mockups::TitleWindow" x="0" y="0" w="1069" h="610" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="0">
+          <controlProperties>
+            <bottomheight>25</bottomheight>
+            <close>true</close>
+            <dragger>true</dragger>
+            <maximizeRestore>true</maximizeRestore>
+            <minimize>true</minimize>
+            <text>Plagiarism-Detector</text>
+            <topheight>26</topheight>
+            <verticalScrollbar>false</verticalScrollbar>
+          </controlProperties>
+        </control>
+        <control controlID="1" controlTypeID="com.balsamiq.mockups::MenuBar" x="0" y="24" w="1069" h="29" measuredW="345" measuredH="29" zOrder="1" locked="false" isInGroup="0">
+          <controlProperties>
+            <text>File%2C%20Edit%2C%20Modules%2C%20Sources%2C%20Analysis%2C%20Help</text>
+          </controlProperties>
+        </control>
+        <control controlID="2" controlTypeID="com.balsamiq.mockups::TabBar" x="0" y="53" w="1069" h="535" measuredW="331" measuredH="100" zOrder="2" locked="false" isInGroup="0">
+          <controlProperties>
+            <borderStyle>square</borderStyle>
+            <selectedIndex>1</selectedIndex>
+            <tabVPosition>top</tabVPosition>
+            <text>Configuration%2C%20Results%202014/06/26%2012%3A37</text>
+          </controlProperties>
+        </control>
+      </groupChildrenDescriptors>
+    </control>
+  </controls>
+</mockup>
