@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="Plagiarism-Detector" company="" webLink="http://" view-date="2014-06-26" view-index="0" gantt-divider-location="354" resource-divider-location="300" version="2.0" locale="en_US">
+<?xml version="1.0" encoding="UTF-8"?><project name="Untitled Gantt Project" company="" webLink="http://" view-date="2014-06-27" view-index="0" gantt-divider-location="354" resource-divider-location="300" version="2.0" locale="en_US">
     <description/>
-    <view zooming-state="default:0" id="gantt-chart">
+    <view zooming-state="default:2" id="gantt-chart">
         <field id="tpd3" name="Name" width="57" order="0"/>
         <field id="tpd4" name="Begin date" width="21" order="1"/>
         <field id="tpd5" name="End date" width="21" order="2"/>
@@ -35,10 +35,6 @@
             <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
             <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
         </taskproperties>
-        <task id="0" name="Gantt" color="#8cb6ce" meeting="false" start="2014-06-26" duration="3" complete="20" priority="2" expand="true"/>
-        <task id="12" name="Architecture" color="#8cb6ce" meeting="false" start="2014-06-26" duration="3" complete="100" priority="2" expand="true"/>
-        <task id="5" name="Mockups" color="#8cb6ce" meeting="false" start="2014-06-26" duration="3" complete="80" expand="true"/>
-        <task id="4" name="Specifications" color="#8cb6ce" meeting="false" start="2014-06-20" duration="7" complete="50" priority="2" expand="true"/>
     </tasks>
     <resources/>
     <allocations/>
@@ -59,4 +55,5 @@
     </taskdisplaycolumns>
     <previous/>
     <roles roleset-name="Default"/>
+    <roles roleset-name="SoftwareDevelopment"/>
 </project>
