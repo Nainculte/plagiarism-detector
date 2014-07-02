@@ -7,6 +7,18 @@ MainWindow::MainWindow()
     tabWidget = new QTabWidget;
     setCentralWidget(tabWidget);
 
+    modules = new QStringList();
+    for(int i = 0; i < 10; i++)
+    {
+        modules->append(QString("module #%1").arg(i));
+    }
+
+    sources = new QStringList();
+    for(int i = 0; i < 50; i++)
+    {
+        sources->append(QString("source #%1").arg(i));
+    }
+
     createActions();
     createMenus();
     initConfigurationView();
@@ -167,7 +179,93 @@ void MainWindow::createMenus()
 
 void MainWindow::initConfigurationView()
 {
+    configuration = new QWidget(this);
 
+    //Module layout
+    QListWidget *moduleList = new QListWidget(configuration);
+    connect(moduleList, SIGNAL(itemChanged(QListWidgetItem *)), this, SLOT(tikModule(QListWidgetItem *)));
+    for (int i = 0;  i < modules->size(); i++)
+    {
+        const QString string = modules->at(i);
+        QListWidgetItem *it = new QListWidgetItem(string);
+        it->setSizeHint(QSize(0, 35));
+        it->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+        it->setCheckState(Qt::Checked);
+        moduleList->addItem(it);
+    }
+    QPushButton *manMod = new QPushButton(tr("Manage Modules"));
+    connect(manMod, SIGNAL(clicked()), this, SLOT(manageModules()));
+    QPushButton *configure = new QPushButton(tr("Configure Module"));
+    connect(configure, SIGNAL(clicked()), this, SLOT(configureModule()));
+
+    QVBoxLayout *moduleLayout = new QVBoxLayout();
+    moduleLayout->addWidget(moduleList);
+    moduleLayout->addWidget(configure);
+    moduleLayout->addWidget(manMod);
+
+    //Sources Layout
+    QListWidget *sourceList = new QListWidget(configuration);
+    for (int i = 0;  i < sources->size(); i++)
+    {
+        const QString string = sources->at(i);
+        QListWidgetItem *it = new QListWidgetItem(string);
+        it->setSizeHint(QSize(0, 35));
+        it->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+        it->setCheckState(Qt::Checked);
+        sourceList->addItem(it);
+    }
+    QPushButton *addFile = new QPushButton(tr("Add Source File(s)..."));
+    connect(addFile, SIGNAL(clicked()), this, SLOT(addSourcesFile()));
+    QPushButton *addFolder = new QPushButton(tr("Add Source Folder(s)..."));
+    connect(addFolder, SIGNAL(clicked()), this, SLOT(addSourcesFolder()));
+    QPushButton *deleteSource = new QPushButton(tr("Delete Source(s)..."));
+    connect(deleteSource, SIGNAL(clicked()), this, SLOT(deleteSources()));
+
+    QHBoxLayout *sourceButtonsLayout = new QHBoxLayout();
+    sourceButtonsLayout->addWidget(addFile);
+    sourceButtonsLayout->addWidget(addFolder);
+    sourceButtonsLayout->addWidget(deleteSource);
+
+    QVBoxLayout *sourceLayout = new QVBoxLayout();
+    sourceLayout->addWidget(sourceList);
+    sourceLayout->addLayout(sourceButtonsLayout);
+
+    //Analysis layout
+    QPushButton *startResumeButton = new QPushButton(tr("Start / Resume"));
+    connect(startResumeButton, SIGNAL(clicked()), this, SLOT(startResume()));
+    QPushButton *pauseButton = new QPushButton(tr("Pause"));
+    connect(pauseButton, SIGNAL(clicked()), this, SLOT(pause()));
+    QPushButton *stopButton = new QPushButton(tr("Stop"));
+    connect(stopButton, SIGNAL(clicked()), this, SLOT(stop()));
+    statusLabel = new QLabel("Waiting");
+
+    QHBoxLayout *analysisButtonsLayout = new QHBoxLayout();
+    analysisButtonsLayout->addWidget(startResumeButton);
+    analysisButtonsLayout->addWidget(pauseButton);
+    analysisButtonsLayout->addWidget(stopButton);
+    analysisButtonsLayout->addWidget(statusLabel);
+
+    progressBar = new QProgressBar();
+    progressBar->setMinimum(0);
+    progressBar->setMaximum(100);
+
+    QVBoxLayout *analysisLayout = new QVBoxLayout();
+    analysisLayout->addLayout(analysisButtonsLayout);
+    analysisLayout->addWidget(progressBar);
+
+    //Source & Analysis layout
+    QVBoxLayout *sourceAnalysis = new QVBoxLayout();
+    sourceAnalysis->addLayout(sourceLayout);
+    sourceAnalysis->addLayout(analysisLayout);
+
+    //Window layout
+    QHBoxLayout *windowLayout = new QHBoxLayout();
+    windowLayout->addLayout(moduleLayout);
+    windowLayout->addLayout(sourceAnalysis);
+
+    configuration->setLayout(windowLayout);
+
+    tabWidget->addTab(configuration, tr("Configuration"));
 }
 
 MainWindow::~MainWindow()
@@ -235,6 +333,11 @@ void MainWindow::addSourcesFolder()
 
 }
 
+void MainWindow::deleteSources()
+{
+
+}
+
 void MainWindow::manageSources()
 {
 
@@ -262,10 +365,26 @@ void MainWindow::stop()
 
 void MainWindow::about()
 {
-
+    QMessageBox::about(this, "About Plagiarism-Detector",
+                       "<h1 align='center'>Plagiarism-Detector</h1>"
+                       "<p align ='center'>Version 0.0.1<br>"
+                       "Developped by:</p>"
+                       "<h2 align='center'>Antoine Jacquin-Ravot</h2>"
+                       "<p align='center'>&</p>"
+                       "<h2 align='center'>Olivier Duménil<h2>");
 }
 
 void MainWindow::documentation()
+{
+
+}
+
+void MainWindow::tikModule(QListWidgetItem *)
+{
+
+}
+
+void MainWindow::configureModule()
 {
 
 }

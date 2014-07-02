@@ -4,6 +4,10 @@
 #include <QMainWindow>
 #include <QTabWidget>
 #include <QMenu>
+#include <QPushButton>
+#include <QListWidgetItem>
+#include <QLabel>
+#include <QProgressBar>
 #include <QAction>
 
 class MainWindow : public QMainWindow
@@ -29,6 +33,7 @@ private slots:
     void selectModules();
     void addSourcesFile();
     void addSourcesFolder();
+    void deleteSources();
     void manageSources();
     void selectSourcesSkeleton();
     void startResume();
@@ -37,12 +42,22 @@ private slots:
     void about();
     void documentation();
 
+    void tikModule(QListWidgetItem *);
+    void configureModule();
+
 private:
     void createActions();
     void createMenus();
     void initConfigurationView();
 
     QTabWidget *tabWidget;
+    QLabel *statusLabel;
+    QProgressBar *progressBar;
+    QWidget *configuration;
+    QList<QWidget> *results;
+
+    QStringList *modules;
+    QStringList *sources;
 
     QMenu *fileMenu;
     QMenu *editMenu;
