@@ -13,11 +13,7 @@ MainWindow::MainWindow()
         modules->append(QString("module #%1").arg(i));
     }
 
-    sources = new QStringList();
-    for(int i = 0; i < 50; i++)
-    {
-        sources->append(QString("source #%1").arg(i));
-    }
+    sources = new SourceModel();
 
     createActions();
     createMenus();
@@ -204,16 +200,8 @@ void MainWindow::initConfigurationView()
     moduleLayout->addWidget(manMod);
 
     //Sources Layout
-    QListWidget *sourceList = new QListWidget(configuration);
-    for (int i = 0;  i < sources->size(); i++)
-    {
-        const QString string = sources->at(i);
-        QListWidgetItem *it = new QListWidgetItem(string);
-        it->setSizeHint(QSize(0, 35));
-        it->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
-        it->setCheckState(Qt::Checked);
-        sourceList->addItem(it);
-    }
+    QListView *sourceList = new QListView(configuration);
+    sourceList->setModel(sources);
     QPushButton *addFile = new QPushButton(tr("Add Source File(s)..."));
     connect(addFile, SIGNAL(clicked()), this, SLOT(addSourcesFile()));
     QPushButton *addFolder = new QPushButton(tr("Add Source Folder(s)..."));
@@ -249,14 +237,11 @@ void MainWindow::initConfigurationView()
     progressBar->setMinimum(0);
     progressBar->setMaximum(100);
 
-    QVBoxLayout *analysisLayout = new QVBoxLayout();
-    analysisLayout->addLayout(analysisButtonsLayout);
-    analysisLayout->addWidget(progressBar);
-
     //Source & Analysis layout
     QVBoxLayout *sourceAnalysis = new QVBoxLayout();
     sourceAnalysis->addLayout(sourceLayout);
-    sourceAnalysis->addLayout(analysisLayout);
+    sourceAnalysis->addLayout(analysisButtonsLayout);
+    sourceAnalysis->addWidget(progressBar);
 
     //Window layout
     QHBoxLayout *windowLayout = new QHBoxLayout();
@@ -325,12 +310,45 @@ void MainWindow::selectModules()
 
 void MainWindow::addSourcesFile()
 {
+    QFileDialog dialog(this);
+    dialog.setDirectory(QStandardPaths::locate(QStandardPaths::DocumentsLocation, "", QStandardPaths::LocateDirectory));
+    dialog.setFileMode(QFileDialog::ExistingFiles);
+    dialog.setOption(QFileDialog::ReadOnly, true);
+    QStringList fileNames;
+    if (dialog.exec())
+    {
+        fileNames = dialog.selectedFiles();
+        sources->insertRows(0, fileNames.count(), QModelIndex());
 
+        for (int i = 0; i < fileNames.count(); ++i)
+        {
+            QModelIndex index = sources->index(i, 0, QModelIndex());
+            sources->setData(index, fileNames.at(i), Qt::EditRole);
+            sources->setData(index, true, Qt::DecorationRole);
+        }
+    }
 }
 
 void MainWindow::addSourcesFolder()
 {
+    QFileDialog dialog(this);
+    dialog.setDirectory(QStandardPaths::locate(QStandardPaths::DocumentsLocation, "", QStandardPaths::LocateDirectory));
+    dialog.setFileMode(QFileDialog::Directory);
+    dialog.setOption(QFileDialog::ReadOnly, true);
+    dialog.setOption(QFileDialog::ShowDirsOnly, true);
+    QStringList fileNames;
+    if (dialog.exec())
+    {
+        fileNames = dialog.selectedFiles();
+        sources->insertRows(0, fileNames.count(), QModelIndex());
 
+        for (int i = 0; i < fileNames.count(); ++i)
+        {
+            QModelIndex index = sources->index(i, 0, QModelIndex());
+            sources->setData(index, fileNames.at(i), Qt::EditRole);
+            sources->setData(index, false, Qt::DecorationRole);
+        }
+    }
 }
 
 void MainWindow::deleteSources()

@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QProgressBar>
 #include <QAction>
+#include "sourcemodel.h"
 
 class MainWindow : public QMainWindow
 {
@@ -57,7 +58,7 @@ private:
     QList<QWidget> *results;
 
     QStringList *modules;
-    QStringList *sources;
+    SourceModel *sources;
 
     QMenu *fileMenu;
     QMenu *editMenu;
