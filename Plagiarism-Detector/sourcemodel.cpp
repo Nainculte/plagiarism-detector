@@ -52,7 +52,7 @@ QVariant SourceModel::headerData(int section, Qt::Orientation orientation, int r
         return QVariant();
     switch (section) {
     case 0:
-        return tr("Source");
+        return tr("Sources");
     default:
         return QVariant();
     }

@@ -10,6 +10,7 @@
 #include <QProgressBar>
 #include <QAction>
 #include "sourcemodel.h"
+#include "modulemodel.h"
 
 class MainWindow : public QMainWindow
 {
@@ -43,7 +44,7 @@ private slots:
     void about();
     void documentation();
 
-    void tikModule(QListWidgetItem *);
+public slots:
     void configureModule();
 
 private:
@@ -56,8 +57,9 @@ private:
     QProgressBar *progressBar;
     QWidget *configuration;
     QList<QWidget> *results;
+    QListView *sourcesListView;
 
-    QStringList *modules;
+    ModuleModel *modules;
     SourceModel *sources;
 
     QMenu *fileMenu;
@@ -75,6 +77,7 @@ private:
     QAction *undoAct;
     QAction *redoAct;
     QAction *manageModulesAct;
+    QAction *configureModuleAct;
     QAction *selectModulesAct;
     QAction *addSourcesFolderAct;
     QAction *addSourcesFileAct;

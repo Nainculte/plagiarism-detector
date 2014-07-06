@@ -1,13 +1,13 @@
-#ifndef SOURCEMODEL_H
-#define SOURCEMODEL_H
+#ifndef MODULEMODEL_H
+#define MODULEMODEL_H
 
 #include <QAbstractListModel>
 
-class SourceModel : public QAbstractListModel
+class ModuleModel : public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit SourceModel(QObject *parent = 0);
+    explicit ModuleModel(QObject *parent = 0);
 
 // QAbstractItemModel interface
 public:
@@ -20,11 +20,11 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const;
 
 public:
-    QList<QHash<QString, QVariant> > getSources() const { return sources; }
+    QList<QHash<QString, QVariant> > getModules() const { return modules; }
 
 private:
-    QList<QHash<QString, QVariant> > sources;
+    QList<QHash<QString, QVariant> > modules;
 
 };
 
-#endif // SOURCEMODEL_H
+#endif // MODULEMODEL_H

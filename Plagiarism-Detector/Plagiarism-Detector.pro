@@ -14,10 +14,14 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    sourcemodel.cpp
+    sourcemodel.cpp \
+    modulemodel.cpp \
+    managemoduledialog.cpp
 
 HEADERS  += mainwindow.h \
-    sourcemodel.h
+    sourcemodel.h \
+    modulemodel.h \
+    managemoduledialog.h
 
 FORMS    +=
 

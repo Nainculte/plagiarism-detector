@@ -1,18 +1,14 @@
 #include <QtWidgets>
 
 #include "mainwindow.h"
+#include "managemoduledialog.h"
 
 MainWindow::MainWindow()
 {
     tabWidget = new QTabWidget;
     setCentralWidget(tabWidget);
 
-    modules = new QStringList();
-    for(int i = 0; i < 10; i++)
-    {
-        modules->append(QString("module #%1").arg(i));
-    }
-
+    modules = new ModuleModel();
     sources = new SourceModel();
 
     createActions();
@@ -67,6 +63,10 @@ void MainWindow::createActions()
     manageModulesAct->setShortcuts(*shortcuts);
     manageModulesAct->setStatusTip("Open the manage modules window");
     connect(manageModulesAct, SIGNAL(triggered()), this, SLOT(manageModules()));
+
+    configureModuleAct = new QAction(tr("&Configure Module..."), this);
+    configureModuleAct->setStatusTip("Open the Configuration window for the selected detection module");
+    connect(configureModuleAct, SIGNAL(triggered()), this, SLOT(configureModule()));
 
     selectModulesAct = new QAction(tr("&Select Modules..."), this);
     //find a shortcut
@@ -178,17 +178,8 @@ void MainWindow::initConfigurationView()
     configuration = new QWidget(this);
 
     //Module layout
-    QListWidget *moduleList = new QListWidget(configuration);
-    connect(moduleList, SIGNAL(itemChanged(QListWidgetItem *)), this, SLOT(tikModule(QListWidgetItem *)));
-    for (int i = 0;  i < modules->size(); i++)
-    {
-        const QString string = modules->at(i);
-        QListWidgetItem *it = new QListWidgetItem(string);
-        it->setSizeHint(QSize(0, 35));
-        it->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled | Qt::ItemIsSelectable);
-        it->setCheckState(Qt::Checked);
-        moduleList->addItem(it);
-    }
+    QListView *moduleList = new QListView(configuration);
+    moduleList->setModel(modules);
     QPushButton *manMod = new QPushButton(tr("Manage Modules"));
     connect(manMod, SIGNAL(clicked()), this, SLOT(manageModules()));
     QPushButton *configure = new QPushButton(tr("Configure Module"));
@@ -200,8 +191,9 @@ void MainWindow::initConfigurationView()
     moduleLayout->addWidget(manMod);
 
     //Sources Layout
-    QListView *sourceList = new QListView(configuration);
-    sourceList->setModel(sources);
+    sourcesListView = new QListView(configuration);
+    sourcesListView->setModel(sources);
+    sourcesListView->setSelectionMode(QAbstractItemView::MultiSelection);
     QPushButton *addFile = new QPushButton(tr("Add Source File(s)..."));
     connect(addFile, SIGNAL(clicked()), this, SLOT(addSourcesFile()));
     QPushButton *addFolder = new QPushButton(tr("Add Source Folder(s)..."));
@@ -215,7 +207,7 @@ void MainWindow::initConfigurationView()
     sourceButtonsLayout->addWidget(deleteSource);
 
     QVBoxLayout *sourceLayout = new QVBoxLayout();
-    sourceLayout->addWidget(sourceList);
+    sourceLayout->addWidget(sourcesListView);
     sourceLayout->addLayout(sourceButtonsLayout);
 
     //Analysis layout
@@ -260,7 +252,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-
+    Q_UNUSED(event)
 }
 
 void MainWindow::exportResults()
@@ -300,7 +292,8 @@ void MainWindow::redo()
 
 void MainWindow::manageModules()
 {
-
+    ManageModuleDialog *dialog = new ManageModuleDialog(this, modules);
+    dialog->exec();
 }
 
 void MainWindow::selectModules()
@@ -353,7 +346,10 @@ void MainWindow::addSourcesFolder()
 
 void MainWindow::deleteSources()
 {
-
+    QModelIndexList indexes;
+    while((indexes = sourcesListView->selectionModel()->selectedIndexes()).size()) {
+        sources->removeRows(indexes.first().row(), 1, QModelIndex());
+    }
 }
 
 void MainWindow::manageSources()
@@ -393,11 +389,6 @@ void MainWindow::about()
 }
 
 void MainWindow::documentation()
-{
-
-}
-
-void MainWindow::tikModule(QListWidgetItem *)
 {
 
 }
