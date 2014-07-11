@@ -33,9 +33,6 @@ private slots:
     void redo();
     void manageModules();
     void selectModules();
-    void addSourcesFile();
-    void addSourcesFolder();
-    void deleteSources();
     void manageSources();
     void selectSourcesSkeleton();
     void startResume();
@@ -46,6 +43,9 @@ private slots:
 
 public slots:
     void configureModule();
+    void addSourcesFile();
+    void addSourcesFolder();
+    void deleteSources();
 
 private:
     void createActions();

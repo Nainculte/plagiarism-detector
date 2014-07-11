@@ -16,12 +16,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     sourcemodel.cpp \
     modulemodel.cpp \
-    managemoduledialog.cpp
+    managemoduledialog.cpp \
+    managesourcesdialog.cpp
 
 HEADERS  += mainwindow.h \
     sourcemodel.h \
     modulemodel.h \
-    managemoduledialog.h
+    managemoduledialog.h \
+    managesourcesdialog.h
 
 FORMS    +=
 

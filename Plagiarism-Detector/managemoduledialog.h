@@ -13,8 +13,6 @@ class ManageModuleDialog : public QDialog
 public:
     explicit ManageModuleDialog(QWidget *parent, ModuleModel *model);
 
-signals:
-
 private:
     QListView *listView;
     QPushButton *addModuleButton;

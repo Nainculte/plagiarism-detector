@@ -2,6 +2,7 @@
 
 #include "mainwindow.h"
 #include "managemoduledialog.h"
+#include "managesourcesdialog.h"
 
 MainWindow::MainWindow()
 {
@@ -32,30 +33,30 @@ void MainWindow::createActions()
     quitAct->setStatusTip("Quit the application");
     connect(quitAct, SIGNAL(triggered()), this, SLOT(quit()));
 
-    cutAct = new QAction(tr("Cu&t"), this);
-    cutAct->setShortcuts(QKeySequence::Cut);
-    cutAct->setStatusTip("Cut the current selection to the clipboard");
-    connect(cutAct, SIGNAL(triggered()), this, SLOT(cut()));
+//    cutAct = new QAction(tr("Cu&t"), this);
+//    cutAct->setShortcuts(QKeySequence::Cut);
+//    cutAct->setStatusTip("Cut the current selection to the clipboard");
+//    connect(cutAct, SIGNAL(triggered()), this, SLOT(cut()));
 
-    copyAct = new QAction(tr("&Copy"), this);
-    copyAct->setShortcuts(QKeySequence::Copy);
-    copyAct->setStatusTip("Copy the current selection to the clipboard");
-    connect(copyAct, SIGNAL(triggered()), this, SLOT(copy()));
+//    copyAct = new QAction(tr("&Copy"), this);
+//    copyAct->setShortcuts(QKeySequence::Copy);
+//    copyAct->setStatusTip("Copy the current selection to the clipboard");
+//    connect(copyAct, SIGNAL(triggered()), this, SLOT(copy()));
 
-    pasteAct = new QAction(tr("&Paste"), this);
-    pasteAct->setShortcuts(QKeySequence::Paste);
-    pasteAct->setStatusTip("Paste the clipboard's contents into the current selection");
-    connect(pasteAct, SIGNAL(triggered()), this, SLOT(paste()));
+//    pasteAct = new QAction(tr("&Paste"), this);
+//    pasteAct->setShortcuts(QKeySequence::Paste);
+//    pasteAct->setStatusTip("Paste the clipboard's contents into the current selection");
+//    connect(pasteAct, SIGNAL(triggered()), this, SLOT(paste()));
 
-    undoAct = new QAction(tr("&Undo"), this);
-    undoAct->setShortcuts(QKeySequence::Undo);
-    undoAct->setStatusTip("Undo last action");
-    connect(undoAct, SIGNAL(triggered()), this, SLOT(undo()));
+//    undoAct = new QAction(tr("&Undo"), this);
+//    undoAct->setShortcuts(QKeySequence::Undo);
+//    undoAct->setStatusTip("Undo last action");
+//    connect(undoAct, SIGNAL(triggered()), this, SLOT(undo()));
 
-    redoAct = new QAction(tr("&Redo"), this);
-    redoAct->setShortcuts(QKeySequence::Redo);
-    redoAct->setStatusTip("Redo last action");
-    connect(redoAct, SIGNAL(triggered()), this, SLOT(redo()));
+//    redoAct = new QAction(tr("&Redo"), this);
+//    redoAct->setShortcuts(QKeySequence::Redo);
+//    redoAct->setStatusTip("Redo last action");
+//    connect(redoAct, SIGNAL(triggered()), this, SLOT(redo()));
 
     manageModulesAct = new QAction(tr("&Manage Modules..."), this);
     shortcuts = new QList<QKeySequence>();
@@ -144,17 +145,17 @@ void MainWindow::createMenus()
     fileMenu->addAction(exportAct);
     fileMenu->addAction(quitAct);
 
-    editMenu = menuBar()->addMenu(tr("&Edit"));
-    editMenu->addAction(cutAct);
-    editMenu->addAction(copyAct);
-    editMenu->addAction(pasteAct);
-    editMenu->addSeparator();
-    editMenu->addAction(undoAct);
-    editMenu->addAction(redoAct);
+//    editMenu = menuBar()->addMenu(tr("&Edit"));
+//    editMenu->addAction(cutAct);
+//    editMenu->addAction(copyAct);
+//    editMenu->addAction(pasteAct);
+//    editMenu->addSeparator();
+//    editMenu->addAction(undoAct);
+//    editMenu->addAction(redoAct);
 
     modulesMenu = menuBar()->addMenu(tr("&Modules"));
     modulesMenu->addAction(manageModulesAct);
-    modulesMenu->addAction(selectModulesAct);
+//    modulesMenu->addAction(selectModulesAct);
 
     sourcesMenu = menuBar()->addMenu(tr("&Sources"));
     sourcesMenu->addAction(addSourcesFileAct);
@@ -354,7 +355,8 @@ void MainWindow::deleteSources()
 
 void MainWindow::manageSources()
 {
-
+    ManageSourcesDialog *dialog = new ManageSourcesDialog(this, sources);
+    dialog->exec();
 }
 
 void MainWindow::selectSourcesSkeleton()
