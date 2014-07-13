@@ -20,4 +20,8 @@
 *.out
 *.app
 
-build-Plagiarism-Detector-Desktop_Qt_5_3_0_clang_64bit-Debug/
+build*
+*.pro.*
+basic-plugin/basic-plugin.pro.user
+detection-module-api/detection-module-api.pro.user
+Plagiarism-Detector/Plagiarism-Detector.pro.user

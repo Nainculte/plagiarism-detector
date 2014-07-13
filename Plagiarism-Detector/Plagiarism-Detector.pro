@@ -17,13 +17,16 @@ SOURCES += main.cpp\
     sourcemodel.cpp \
     modulemodel.cpp \
     managemoduledialog.cpp \
-    managesourcesdialog.cpp
+    managesourcesdialog.cpp \
+    DetectionModuleHolder.cpp
 
 HEADERS  += mainwindow.h \
     sourcemodel.h \
     modulemodel.h \
     managemoduledialog.h \
-    managesourcesdialog.h
+    managesourcesdialog.h \
+    DetectionModuleHolder.h \
+    DetectionModuleInterface.h
 
 FORMS    +=
 

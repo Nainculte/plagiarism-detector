@@ -3,6 +3,10 @@
 #include <QHBoxLayout>
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <QMessageBox>
+#include <QPluginLoader>
+#include <QObject>
+#include "DetectionModuleInterface.h"
 
 ManageModuleDialog::ManageModuleDialog(QWidget *parent, ModuleModel *model) :
     QDialog(parent)
@@ -14,9 +18,9 @@ ManageModuleDialog::ManageModuleDialog(QWidget *parent, ModuleModel *model) :
     deleteModuleAct->setStatusTip("Delete the selected module");
 
     listView = new QListView();
-    addModuleButton = new QPushButton(tr("Add Module(s)..."));
+    addModuleButton = new QPushButton(tr("Add Module..."));
     deleteModuleButton = new QPushButton(tr("Delete Module"));
-    configureModuleButton = new QPushButton(tr("Configure Module"));
+    configureModuleButton = new QPushButton(tr("Configure Module..."));
     okButton = new QPushButton(tr("Ok"));
 
     QVBoxLayout *windowLayout = new QVBoxLayout();
@@ -44,18 +48,33 @@ void ManageModuleDialog::addModule()
 {
     QFileDialog dialog(this);
     dialog.setDirectory(QStandardPaths::locate(QStandardPaths::DocumentsLocation, "", QStandardPaths::LocateDirectory));
-    dialog.setFileMode(QFileDialog::ExistingFiles);
+    dialog.setFileMode(QFileDialog::ExistingFile);
     dialog.setOption(QFileDialog::ReadOnly, true);
     QStringList fileNames;
     if (dialog.exec())
     {
         fileNames = dialog.selectedFiles();
-        model->insertRows(0, fileNames.count(), QModelIndex());
-
-        for (int i = 0; i < fileNames.count(); ++i)
+        QString name = fileNames.at(0);
+        QPluginLoader loader(name);
+        QObject *plug = loader.instance();
+        if (plug)
         {
-            QModelIndex index = model->index(i, 0, QModelIndex());
-            model->setData(index, fileNames.at(i), Qt::EditRole);
+            DetectionModuleInterface *plugin = qobject_cast<DetectionModuleInterface *>(plug);
+            if (plugin)
+            {
+                model->insertRows(0, 1, QModelIndex());
+                QModelIndex index = model->index(0, 0, QModelIndex());
+                model->setData(index, plugin->getModuleInformation(), Qt::EditRole);
+                model->setData(index, QVariant(QMetaType::QObjectStar, plug), Qt::UserRole);
+            }
+            else
+            {
+                QMessageBox::warning(this, "Detection module", "Selected file is not a valid detection module.");
+            }
+        }
+        else
+        {
+            QMessageBox::warning(this, "Detection module", "Selected file is not a valid detection module.");
         }
     }
 }

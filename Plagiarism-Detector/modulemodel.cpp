@@ -22,6 +22,14 @@ QVariant ModuleModel::data(const QModelIndex &index, int role) const
         return modules.at(index.row())["moduleName"].toString();
     if (role == Qt::CheckStateRole)
         return modules.at(index.row())["checked"].toBool() ? Qt::Checked : Qt::Unchecked;
+    if (role == Qt::UserRole)
+    {
+        return modules.at(index.row())["plugin"];
+        // From QVariant to QObject *
+        //QObject * obj = qvariant_cast<QObject *>(item->data(Qt::UserRole));
+        // from QObject* to myClass*
+        //myClass * lmyClass = qobject_cast<myClass *>(obj);
+    }
     return QVariant();
 }
 
@@ -47,6 +55,7 @@ bool ModuleModel::insertRows(int row, int count, const QModelIndex &parent)
         QHash<QString, QVariant> *h = new QHash<QString, QVariant>();
         h->insert("moduleName", "");
         h->insert("checked", true);
+        h->insert("plugin", QVariant());
         modules.insert(row, *h);
     }
     endInsertRows();
@@ -82,6 +91,15 @@ bool ModuleModel::setData(const QModelIndex &index, const QVariant &value, int r
         int row = index.row();
         QHash<QString, QVariant> h = modules.value(row);
         h["checked"] = value.toBool();
+        modules.replace(row, h);
+        emit(dataChanged(index, index));
+        return true;
+    }
+    if (index.isValid() && role == Qt::UserRole)
+    {
+        int row = index.row();
+        QHash<QString, QVariant> h = modules.value(row);
+        h["plugin"] = value;
         modules.replace(row, h);
         emit(dataChanged(index, index));
         return true;
