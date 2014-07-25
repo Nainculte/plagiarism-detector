@@ -413,7 +413,9 @@ void MainWindow::pause()
 
 void MainWindow::stop()
 {
-
+    currentModule->stopAnalysis();
+    checkedModules.clear();
+    finishedModules.clear();
 }
 
 void MainWindow::about()
@@ -434,10 +436,10 @@ void MainWindow::documentation()
 
 void MainWindow::configureModule()
 {
-    QModelIndex indexes = modulesListView->selectionModel()->selectedIndexes();
+    QModelIndexList indexes = modulesListView->selectionModel()->selectedIndexes();
     if (indexes.size())
     {
-        QObject *obj = qvariant_cast<QObject *>(modules->data(index, Qt::UserRole));
+        QObject *obj = qvariant_cast<QObject *>(modules->data(indexes.first(), Qt::UserRole));
         DetectionModuleInterface *module = qobject_cast<DetectionModuleInterface *>(obj);
         module->getParameterForm().exec();
     }
