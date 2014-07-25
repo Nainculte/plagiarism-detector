@@ -7,20 +7,12 @@ class DetectionModuleInterface;
 
 class DetectionModuleHolder
 {
-private:
-    DetectionModuleInterface *plugin_;
-    QString pluginInfo_;
-    QString parameterForm_;
+public:
+    virtual ~DetectionModuleHolder(void) {}
 
 public:
-    DetectionModuleHolder(DetectionModuleInterface *plugin);
-    ~DetectionModuleHolder();
-
-public:
-    void setStatusCallback(int status);
-    void setProgressCallback(int progress);
+    virtual void statusChanged(int newStatus) = 0;
+    virtual void progressChanged(int newProgress) = 0;
 };
-
-#include "DetectionModuleInterface.h"
 
 #endif // DETECTIONMODULEHOLDER_H

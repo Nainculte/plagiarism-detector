@@ -11,14 +11,19 @@
 #include <QAction>
 #include "sourcemodel.h"
 #include "modulemodel.h"
+#include "DetectionModuleInterface.h"
+#include "DetectionModuleHolder.h"
 
-class MainWindow : public QMainWindow
+class MainWindow : public QMainWindow, public DetectionModuleHolder
 {
     Q_OBJECT
 
 public:
     explicit MainWindow();
     ~MainWindow();
+
+    void statusChanged(int newStatus);
+    void progressChanged(int newProgress);
 
 protected:
     void closeEvent(QCloseEvent *event);
@@ -58,9 +63,18 @@ private:
     QWidget *configuration;
     QList<QWidget> *results;
     QListView *sourcesListView;
+    QListView *modulesListView;
 
     ModuleModel *modules;
     SourceModel *sources;
+
+    bool isPaused;
+
+    DetectionModuleInterface *currentModule;
+    QList<DetectionModuleInterface *>checkedModules;
+    QList<DetectionModuleInterface *>finishedModules;
+
+    int moduleNumber;
 
     QMenu *fileMenu;
     QMenu *editMenu;

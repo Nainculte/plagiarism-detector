@@ -12,6 +12,8 @@ MainWindow::MainWindow()
     modules = new ModuleModel();
     sources = new SourceModel();
 
+    isPaused = false;
+
     createActions();
     createMenus();
     initConfigurationView();
@@ -179,15 +181,15 @@ void MainWindow::initConfigurationView()
     configuration = new QWidget(this);
 
     //Module layout
-    QListView *moduleList = new QListView(configuration);
-    moduleList->setModel(modules);
+    modulesListView = new QListView(configuration);
+    modulesListView->setModel(modules);
     QPushButton *manMod = new QPushButton(tr("Manage Modules"));
     connect(manMod, SIGNAL(clicked()), this, SLOT(manageModules()));
     QPushButton *configure = new QPushButton(tr("Configure Module"));
     connect(configure, SIGNAL(clicked()), this, SLOT(configureModule()));
 
     QVBoxLayout *moduleLayout = new QVBoxLayout();
-    moduleLayout->addWidget(moduleList);
+    moduleLayout->addWidget(modulesListView);
     moduleLayout->addWidget(configure);
     moduleLayout->addWidget(manMod);
 
@@ -366,12 +368,47 @@ void MainWindow::selectSourcesSkeleton()
 
 void MainWindow::startResume()
 {
+    if (!isPaused)
+    {
+        // start
+        QModelIndexList *indexes = new QModelIndexList();
+        for (int i = 0; i < modules->rowCount(QModelIndex()); ++i)
+            indexes->append(modules->index(i, 0));
 
+        if (!indexes->count())
+        {
+            QMessageBox::warning(this, "Warning", "Add at least a detection module to start");
+            return;
+        }
+
+        for(int i = 0; i < indexes->count(); ++i)
+        {
+            QModelIndex index = indexes->at(i);
+            if (modules->data(index, Qt::CheckStateRole).toBool())
+            {
+                QObject *obj = qvariant_cast<QObject *>(modules->data(index, Qt::UserRole));
+                DetectionModuleInterface *module = qobject_cast<DetectionModuleInterface *>(obj);
+                module->setDelegate(this);
+                checkedModules.append(module);
+            }
+        }
+        moduleNumber = checkedModules.count();
+    }
+
+    if (checkedModules.count())
+    {
+        currentModule = checkedModules.first();
+        currentModule->startAnalysis();
+    }
+    else
+    {
+        QMessageBox::warning(this, "Warning", "Please check at least one detection Module");
+    }
 }
 
 void MainWindow::pause()
 {
-
+    currentModule->pauseAnalysis();
 }
 
 void MainWindow::stop()
@@ -397,5 +434,59 @@ void MainWindow::documentation()
 
 void MainWindow::configureModule()
 {
+    QModelIndex indexes = modulesListView->selectionModel()->selectedIndexes();
+    if (indexes.size())
+    {
+        QObject *obj = qvariant_cast<QObject *>(modules->data(index, Qt::UserRole));
+        DetectionModuleInterface *module = qobject_cast<DetectionModuleInterface *>(obj);
+        module->getParameterForm().exec();
+    }
+}
 
+void MainWindow::statusChanged(int newStatus)
+{
+    switch (newStatus) {
+    case DetectionModuleInterface::started:
+        isPaused = false;
+        progressBar->setEnabled(true);
+        break;
+    case DetectionModuleInterface::resumed:
+        isPaused = false;
+        progressBar->setEnabled(true);
+        break;
+    case DetectionModuleInterface::paused:
+        isPaused = true;
+        progressBar->setEnabled(false);
+        break;
+    case DetectionModuleInterface::stopped:
+        isPaused = false;
+        progressBar->setEnabled(false);
+        break;
+    case DetectionModuleInterface::finished:
+        // get current module results or add the module to a list of finished modules
+        finishedModules.append(checkedModules.first());
+        checkedModules.pop_front();
+        if (checkedModules.count())
+        {
+            currentModule = checkedModules.first();
+            currentModule->startAnalysis();
+        }
+        else
+        {
+            // create result view
+            progressBar->setEnabled(false);
+        }
+        break;
+    default:
+        // an error occured somewhere
+        break;
+    }
+}
+
+void MainWindow::progressChanged(int newProgress)
+{
+    int finished = finishedModules.count();
+    int onGoing = checkedModules.count();
+    int total = finished + onGoing;
+    progressBar->setValue((100 / total * finished) + (newProgress * 100 / total));
 }

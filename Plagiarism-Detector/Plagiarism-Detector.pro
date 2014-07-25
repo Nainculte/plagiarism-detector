@@ -17,8 +17,7 @@ SOURCES += main.cpp\
     sourcemodel.cpp \
     modulemodel.cpp \
     managemoduledialog.cpp \
-    managesourcesdialog.cpp \
-    DetectionModuleHolder.cpp
+    managesourcesdialog.cpp
 
 HEADERS  += mainwindow.h \
     sourcemodel.h \
