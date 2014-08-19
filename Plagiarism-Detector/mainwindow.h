@@ -31,13 +31,7 @@ protected:
 private slots:
     void exportResults();
     void quit();
-    void cut();
-    void copy();
-    void paste();
-    void undo();
-    void redo();
     void manageModules();
-    void selectModules();
     void manageSources();
     void selectSourcesSkeleton();
     void startResume();
@@ -57,6 +51,8 @@ private:
     void createMenus();
     void initConfigurationView();
     void createResultView();
+    void lockUserInterface();
+    void unlockUserInterface();
 
     QTabWidget *tabWidget;
     QLabel *statusLabel;
@@ -65,10 +61,16 @@ private:
     QList<QWidget *> *results;
     QListView *sourcesListView;
     QListView *modulesListView;
+    QPushButton *manageModulesButton;
+    QPushButton *configureModuleButton;
+    QPushButton *addFilesButton;
+    QPushButton *addFoldersButton;
+    QPushButton *deleteSourcesButton;
 
     ModuleModel *modules;
     SourceModel *sources;
 
+    bool analisysRunning;
     bool isPaused;
 
     DetectionModuleInterface *currentModule;
@@ -78,7 +80,6 @@ private:
     int moduleNumber;
 
     QMenu *fileMenu;
-    QMenu *editMenu;
     QMenu *modulesMenu;
     QMenu *sourcesMenu;
     QMenu *analysisMenu;
@@ -86,14 +87,8 @@ private:
 
     QAction *exportAct;
     QAction *quitAct;
-    QAction *cutAct;
-    QAction *copyAct;
-    QAction *pasteAct;
-    QAction *undoAct;
-    QAction *redoAct;
     QAction *manageModulesAct;
     QAction *configureModuleAct;
-    QAction *selectModulesAct;
     QAction *addSourcesFolderAct;
     QAction *addSourcesFileAct;
     QAction *manageSourcesAct;

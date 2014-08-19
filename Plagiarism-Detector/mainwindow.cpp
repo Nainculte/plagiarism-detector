@@ -3,6 +3,7 @@
 #include "mainwindow.h"
 #include "managemoduledialog.h"
 #include "managesourcesdialog.h"
+#include "quitdialog.h"
 
 MainWindow::MainWindow()
 {
@@ -35,31 +36,6 @@ void MainWindow::createActions()
     quitAct->setStatusTip("Quit the application");
     connect(quitAct, SIGNAL(triggered()), this, SLOT(quit()));
 
-//    cutAct = new QAction(tr("Cu&t"), this);
-//    cutAct->setShortcuts(QKeySequence::Cut);
-//    cutAct->setStatusTip("Cut the current selection to the clipboard");
-//    connect(cutAct, SIGNAL(triggered()), this, SLOT(cut()));
-
-//    copyAct = new QAction(tr("&Copy"), this);
-//    copyAct->setShortcuts(QKeySequence::Copy);
-//    copyAct->setStatusTip("Copy the current selection to the clipboard");
-//    connect(copyAct, SIGNAL(triggered()), this, SLOT(copy()));
-
-//    pasteAct = new QAction(tr("&Paste"), this);
-//    pasteAct->setShortcuts(QKeySequence::Paste);
-//    pasteAct->setStatusTip("Paste the clipboard's contents into the current selection");
-//    connect(pasteAct, SIGNAL(triggered()), this, SLOT(paste()));
-
-//    undoAct = new QAction(tr("&Undo"), this);
-//    undoAct->setShortcuts(QKeySequence::Undo);
-//    undoAct->setStatusTip("Undo last action");
-//    connect(undoAct, SIGNAL(triggered()), this, SLOT(undo()));
-
-//    redoAct = new QAction(tr("&Redo"), this);
-//    redoAct->setShortcuts(QKeySequence::Redo);
-//    redoAct->setStatusTip("Redo last action");
-//    connect(redoAct, SIGNAL(triggered()), this, SLOT(redo()));
-
     manageModulesAct = new QAction(tr("&Manage Modules..."), this);
     shortcuts = new QList<QKeySequence>();
     shortcuts->append(QKeySequence::fromString("Ctrl+M", QKeySequence::NativeText));
@@ -70,14 +46,6 @@ void MainWindow::createActions()
     configureModuleAct = new QAction(tr("&Configure Module..."), this);
     configureModuleAct->setStatusTip("Open the Configuration window for the selected detection module");
     connect(configureModuleAct, SIGNAL(triggered()), this, SLOT(configureModule()));
-
-    selectModulesAct = new QAction(tr("&Select Modules..."), this);
-    //find a shortcut
-    //shortcuts = new QList<QKeySequence>();
-    //shortcuts->append(QKeySequence::fromString("Ctrl+", QKeySequence::NativeText));
-    //newAct->setShortcuts(*shortcuts);
-    selectModulesAct->setStatusTip("Open the select modules window");
-    connect(selectModulesAct, SIGNAL(triggered()), this, SLOT(selectModules()));
 
     addSourcesFolderAct = new QAction(tr("Add &Sources Folders..."), this);
     // find a shortcut
@@ -147,17 +115,8 @@ void MainWindow::createMenus()
     fileMenu->addAction(exportAct);
     fileMenu->addAction(quitAct);
 
-//    editMenu = menuBar()->addMenu(tr("&Edit"));
-//    editMenu->addAction(cutAct);
-//    editMenu->addAction(copyAct);
-//    editMenu->addAction(pasteAct);
-//    editMenu->addSeparator();
-//    editMenu->addAction(undoAct);
-//    editMenu->addAction(redoAct);
-
     modulesMenu = menuBar()->addMenu(tr("&Modules"));
     modulesMenu->addAction(manageModulesAct);
-//    modulesMenu->addAction(selectModulesAct);
 
     sourcesMenu = menuBar()->addMenu(tr("&Sources"));
     sourcesMenu->addAction(addSourcesFileAct);
@@ -183,31 +142,31 @@ void MainWindow::initConfigurationView()
     //Module layout
     modulesListView = new QListView(configuration);
     modulesListView->setModel(modules);
-    QPushButton *manMod = new QPushButton(tr("Manage Modules"));
-    connect(manMod, SIGNAL(clicked()), this, SLOT(manageModules()));
-    QPushButton *configure = new QPushButton(tr("Configure Module"));
-    connect(configure, SIGNAL(clicked()), this, SLOT(configureModule()));
+    manageModulesButton = new QPushButton(tr("Manage Modules"));
+    connect(manageModulesButton, SIGNAL(clicked()), this, SLOT(manageModules()));
+    configureModuleButton = new QPushButton(tr("Configure Module"));
+    connect(configureModuleButton, SIGNAL(clicked()), this, SLOT(configureModule()));
 
     QVBoxLayout *moduleLayout = new QVBoxLayout();
     moduleLayout->addWidget(modulesListView);
-    moduleLayout->addWidget(configure);
-    moduleLayout->addWidget(manMod);
+    moduleLayout->addWidget(configureModuleButton);
+    moduleLayout->addWidget(manageModulesButton);
 
     //Sources Layout
     sourcesListView = new QListView(configuration);
     sourcesListView->setModel(sources);
     sourcesListView->setSelectionMode(QAbstractItemView::MultiSelection);
-    QPushButton *addFile = new QPushButton(tr("Add Source File(s)..."));
-    connect(addFile, SIGNAL(clicked()), this, SLOT(addSourcesFile()));
-    QPushButton *addFolder = new QPushButton(tr("Add Source Folder(s)..."));
-    connect(addFolder, SIGNAL(clicked()), this, SLOT(addSourcesFolder()));
-    QPushButton *deleteSource = new QPushButton(tr("Delete Source(s)..."));
-    connect(deleteSource, SIGNAL(clicked()), this, SLOT(deleteSources()));
+    addFilesButton = new QPushButton(tr("Add Source File(s)..."));
+    connect(addFilesButton, SIGNAL(clicked()), this, SLOT(addSourcesFile()));
+    addFoldersButton = new QPushButton(tr("Add Source Folder(s)..."));
+    connect(addFoldersButton, SIGNAL(clicked()), this, SLOT(addSourcesFolder()));
+    deleteSourcesButton = new QPushButton(tr("Delete Source(s)..."));
+    connect(deleteSourcesButton, SIGNAL(clicked()), this, SLOT(deleteSources()));
 
     QHBoxLayout *sourceButtonsLayout = new QHBoxLayout();
-    sourceButtonsLayout->addWidget(addFile);
-    sourceButtonsLayout->addWidget(addFolder);
-    sourceButtonsLayout->addWidget(deleteSource);
+    sourceButtonsLayout->addWidget(addFilesButton);
+    sourceButtonsLayout->addWidget(addFoldersButton);
+    sourceButtonsLayout->addWidget(deleteSourcesButton);
 
     QVBoxLayout *sourceLayout = new QVBoxLayout();
     sourceLayout->addWidget(sourcesListView);
@@ -262,7 +221,22 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    Q_UNUSED(event)
+    if (analisysRunning)
+    {
+        QuitDialog *dialog = new QuitDialog(this);
+        if (dialog->exec())
+        {
+            event->accept();
+        }
+        else
+        {
+            event->ignore();
+        }
+    }
+    else
+    {
+        event->accept();
+    }
 }
 
 void MainWindow::exportResults()
@@ -272,43 +246,13 @@ void MainWindow::exportResults()
 
 void MainWindow::quit()
 {
-
-}
-
-void MainWindow::cut()
-{
-
-}
-
-void MainWindow::copy()
-{
-
-}
-
-void MainWindow::paste()
-{
-
-}
-
-void MainWindow::undo()
-{
-
-}
-
-void MainWindow::redo()
-{
-
+    close();
 }
 
 void MainWindow::manageModules()
 {
     ManageModuleDialog *dialog = new ManageModuleDialog(this, modules);
     dialog->exec();
-}
-
-void MainWindow::selectModules()
-{
-
 }
 
 void MainWindow::addSourcesFile()
@@ -396,6 +340,7 @@ void MainWindow::startResume()
                 QObject *obj = qvariant_cast<QObject *>(modules->data(index, Qt::UserRole));
                 DetectionModuleInterface *module = qobject_cast<DetectionModuleInterface *>(obj);
                 module->setDelegate(this);
+                module->setSources(sources->getSources());
                 checkedModules.append(module);
             }
         }
@@ -404,6 +349,8 @@ void MainWindow::startResume()
 
     if (checkedModules.count())
     {
+        modulesListView->setEnabled(false);
+        sourcesListView->setEnabled(false);
         currentModule = checkedModules.first();
         currentModule->startAnalysis();
     }
@@ -457,8 +404,9 @@ void MainWindow::statusChanged(int newStatus)
     switch (newStatus) {
     case DetectionModuleInterface::started:
         isPaused = false;
+        analisysRunning = true;
         progressBar->setEnabled(true);
-
+        lockUserInterface();
         break;
     case DetectionModuleInterface::resumed:
         isPaused = false;
@@ -470,7 +418,9 @@ void MainWindow::statusChanged(int newStatus)
         break;
     case DetectionModuleInterface::stopped:
         isPaused = false;
+        analisysRunning = false;
         progressBar->setEnabled(false);
+        unlockUserInterface();
         break;
     case DetectionModuleInterface::finished:
         // get current module results or add the module to a list of finished modules
@@ -485,10 +435,13 @@ void MainWindow::statusChanged(int newStatus)
         {
             // create result view
             progressBar->setEnabled(false);
+            unlockUserInterface();
+            analisysRunning = false;
         }
         break;
     default:
         // an error occured somewhere
+        unlockUserInterface();
         break;
     }
 }
@@ -499,4 +452,30 @@ void MainWindow::progressChanged(int newProgress)
     int onGoing = checkedModules.count();
     int total = finished + onGoing;
     progressBar->setValue((100 / total * finished) + (newProgress * (100 / total)));
+}
+
+void MainWindow::lockUserInterface()
+{
+    sourcesListView->setEnabled(false);
+    modulesListView->setEnabled(false);
+    manageModulesAct->setEnabled(false);
+    configureModuleAct->setEnabled(false);
+    addSourcesFileAct->setEnabled(false);
+    addSourcesFolderAct->setEnabled(false);
+    manageSourcesAct->setEnabled(false);
+    deleteSourcesButton->setEnabled(false);
+    selectSourcesSkeletonAct->setEnabled(false);
+}
+
+void MainWindow::unlockUserInterface()
+{
+    sourcesListView->setEnabled(true);
+    modulesListView->setEnabled(true);
+    manageModulesAct->setEnabled(true);
+    configureModuleAct->setEnabled(true);
+    addSourcesFileAct->setEnabled(true);
+    addSourcesFolderAct->setEnabled(true);
+    manageSourcesAct->setEnabled(true);
+    deleteSourcesButton->setEnabled(true);
+    selectSourcesSkeletonAct->setEnabled(true);
 }
