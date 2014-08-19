@@ -1,9 +1,6 @@
 #ifndef BASICPLUGIN_H
 #define BASICPLUGIN_H
 
-#include <QObject>
-#include <QWidget>
-#include <QString>
 #include "basic-plugin_global.h"
 #include "DetectionModuleInterface.h"
 #include "DetectionModuleHolder.h"
@@ -19,19 +16,26 @@ public:
     virtual ~Basicplugin(void);
 
     virtual QString getModuleInformation(void);
-    virtual QDialog getParameterForm(void);
+    virtual QDialog &getParameterForm(void);
     virtual bool startAnalysis(void);
     virtual bool stopAnalysis(void);
     virtual bool pauseAnalysis(void);
-    virtual void setSources(QList<QString> list);
+    virtual void setSources(QList<QHash<QString, QVariant> > list);
     virtual QList<QHash<QString, QVariant> > getAnalysisResults(void);
-    virtual bool setCallback(QString id, void (DetectionModuleHolder::*delegate)(void));
     virtual void setDelegate(DetectionModuleHolder *delegate);
 
 private:
     DetectionModuleHolder *delegate;
-    QList<QString> sources;
+    QList<QHash<QString, QVariant> > sources;
+    QDialog *parameterForm;
+    QList<QHash<QString, QVariant> > results;
+};
 
+class ParameterDialog : public QDialog
+{
+    Q_OBJECT
+public:
+    explicit ParameterDialog(QWidget *parent = 0);
 };
 
 #endif // BASICPLUGIN_H

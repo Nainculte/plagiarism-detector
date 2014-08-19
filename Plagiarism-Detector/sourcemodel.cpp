@@ -42,11 +42,6 @@ QVariant SourceModel::data(const QModelIndex &index, int role) const
     }
     if (role == Qt::CheckStateRole)
         return sources.at(index.row())["checked"].toBool() ? Qt::Checked : Qt::Unchecked;
-    if (role == Qt::UserRole)
-    {
-        QFile *file = new QFile(sources.at(index.row())["fileName"].toString());
-        return file;
-    }
     return QVariant();
 }
 

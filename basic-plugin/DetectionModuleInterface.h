@@ -1,8 +1,10 @@
 #ifndef DETECTIONMODULEINTERFACE_H
 #define DETECTIONMODULEINTERFACE_H
 
+#include <QDialog>
 #include <QString>
 #include <QObject>
+#include <QVariant>
 #include "DetectionModuleHolder.h"
 
 class QDialog;
@@ -13,13 +15,12 @@ public:
     virtual ~DetectionModuleInterface(void) {}
 
     virtual QString getModuleInformation(void) = 0;
-    virtual QDialog getParameterForm(void) = 0;
+    virtual QDialog &getParameterForm(void) = 0;
     virtual bool startAnalysis(void) = 0;
     virtual bool stopAnalysis(void) = 0;
     virtual bool pauseAnalysis(void) = 0;
-    virtual void setSources(QList<QString>) = 0;
-    virtual QString getAnalysisResults(void) = 0;
-    virtual bool setCallback(QString id, void (DetectionModuleHolder::*delegate)(void)) = 0;
+    virtual void setSources(QList<QHash<QString, QVariant> >) = 0;
+    virtual QList<QHash<QString, QVariant> > getAnalysisResults(void) = 0;
     virtual void setDelegate(DetectionModuleHolder *delegate) = 0;
 
     static const int started = 0;

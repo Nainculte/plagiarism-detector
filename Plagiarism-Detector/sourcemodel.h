@@ -2,7 +2,6 @@
 #define SOURCEMODEL_H
 
 #include <QAbstractListModel>
-
 class SourceModel : public QAbstractListModel
 {
     Q_OBJECT

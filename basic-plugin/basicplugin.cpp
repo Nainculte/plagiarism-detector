@@ -4,6 +4,7 @@
 Basicplugin::Basicplugin()
 {
     delegate = Q_NULLPTR;
+    parameterForm = new ParameterDialog();
 }
 
 Basicplugin::~Basicplugin(void)
@@ -16,12 +17,12 @@ QString Basicplugin::getModuleInformation()
     return QString("Test Detection Module");
 }
 
-QDialog Basicplugin::getParameterForm()
+QDialog& Basicplugin::getParameterForm()
 {
-    return QDialog();
+    return *parameterForm;
 }
 
-bool Basicplugin::StartAnalysis()
+bool Basicplugin::startAnalysis()
 {
     if (delegate)
     {
@@ -48,24 +49,23 @@ bool Basicplugin::pauseAnalysis()
     return true;
 }
 
-void Basicplugin::setSources(QList<QString> list)
+void Basicplugin::setSources(QList<QHash<QString, QVariant> > list)
 {
     sources = list;
 }
 
 QList<QHash<QString, QVariant> > Basicplugin::getAnalysisResults()
 {
-    return *QList();
-}
-
-bool Basicplugin::setCallback(QString id, void (DetectionModuleHolder::*delegate)())
-{
-    Q_UNUSED(delegate);
-    return true;
+    return results;
 }
 
 
 void Basicplugin::setDelegate(DetectionModuleHolder *delegate)
 {
     this->delegate = delegate;
+}
+
+ParameterDialog::ParameterDialog(QWidget *parent) : QDialog(parent)
+{
+
 }
