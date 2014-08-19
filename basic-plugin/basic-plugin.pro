@@ -13,6 +13,8 @@ TEMPLATE = lib
 
 DEFINES += BASICPLUGIN_LIBRARY
 
+include(basic-plugin.pri)
+
 SOURCES += basicplugin.cpp
 
 HEADERS += basicplugin.h\
