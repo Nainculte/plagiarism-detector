@@ -248,6 +248,13 @@ void MainWindow::initConfigurationView()
     tabWidget->addTab(configuration, tr("Configuration"));
 }
 
+void MainWindow::createResultView()
+{
+    QWidget *result = new QWidget(this);
+    results->append(result);
+    tabWidget->addTab(result, QDateTime::currentDateTime().toString("Result dd/mm/yyyy hh:mm"));
+}
+
 MainWindow::~MainWindow()
 {
 
@@ -451,6 +458,7 @@ void MainWindow::statusChanged(int newStatus)
     case DetectionModuleInterface::started:
         isPaused = false;
         progressBar->setEnabled(true);
+
         break;
     case DetectionModuleInterface::resumed:
         isPaused = false;
@@ -490,5 +498,5 @@ void MainWindow::progressChanged(int newProgress)
     int finished = finishedModules.count();
     int onGoing = checkedModules.count();
     int total = finished + onGoing;
-    progressBar->setValue((100 / total * finished) + (newProgress * 100 / total));
+    progressBar->setValue((100 / total * finished) + (newProgress * (100 / total)));
 }

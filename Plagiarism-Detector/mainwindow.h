@@ -56,12 +56,13 @@ private:
     void createActions();
     void createMenus();
     void initConfigurationView();
+    void createResultView();
 
     QTabWidget *tabWidget;
     QLabel *statusLabel;
     QProgressBar *progressBar;
     QWidget *configuration;
-    QList<QWidget> *results;
+    QList<QWidget *> *results;
     QListView *sourcesListView;
     QListView *modulesListView;
 
