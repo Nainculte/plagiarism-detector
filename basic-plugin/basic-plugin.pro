@@ -15,7 +15,8 @@ SOURCES += basicplugin.cpp
 
 HEADERS += basicplugin.h\
         basic-plugin_global.h \
-    DetectionModuleInterface.h
+    DetectionModuleInterface.h \
+    DetectionModuleHolder.h
 
 unix {
     target.path = /usr/lib
