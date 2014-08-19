@@ -9,13 +9,14 @@ QT       -= gui
 TARGET = basic-plugin
 TEMPLATE = lib
 
+include(basic-plugin.pri)
+
 DEFINES += BASICPLUGIN_LIBRARY
 
 SOURCES += basicplugin.cpp
 
 HEADERS += basicplugin.h\
         basic-plugin_global.h \
-    DetectionModuleInterface.h \
     DetectionModuleHolder.h
 
 unix {
