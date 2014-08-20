@@ -18,7 +18,12 @@ SOURCES += main.cpp\
     modulemodel.cpp \
     managemoduledialog.cpp \
     managesourcesdialog.cpp \
-    quitdialog.cpp
+    quitdialog.cpp \
+    resultmodel.cpp \
+    treenode.cpp \
+    moduleresultwrapper.cpp \
+    analysisresult.cpp \
+    summarymodule.cpp
 
 HEADERS  += mainwindow.h \
     sourcemodel.h \
@@ -27,7 +32,12 @@ HEADERS  += mainwindow.h \
     managesourcesdialog.h \
     DetectionModuleHolder.h \
     DetectionModuleInterface.h \
-    quitdialog.h
+    quitdialog.h \
+    resultmodel.h \
+    treenode.h \
+    moduleresultwrapper.h \
+    analysisresult.h \
+    summarymodule.h
 
 FORMS    +=
 

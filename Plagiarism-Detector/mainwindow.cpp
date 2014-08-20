@@ -4,6 +4,8 @@
 #include "managemoduledialog.h"
 #include "managesourcesdialog.h"
 #include "quitdialog.h"
+#include "moduleresultwrapper.h"
+#include "resultmodel.h"
 
 MainWindow::MainWindow()
 {
@@ -212,6 +214,17 @@ void MainWindow::createResultView()
     QWidget *result = new QWidget(this);
     results->append(result);
     tabWidget->addTab(result, QDateTime::currentDateTime().toString("Result dd/mm/yyyy hh:mm"));
+
+    QList<ModuleResultWrapper> wrappers;
+    foreach (DetectionModuleInterface *module, finishedModules) {
+        ModuleResultWrapper *wrapper = new ModuleResultWrapper(module, module->getAnalysisResults());
+        wrappers << *wrapper;
+    }
+    ResultModel *model = new ResultModel(wrappers,
+                                         sources->getSources().count(),
+                                         this);
+    QListView *sideView = new QListView(result);
+    sideView->setModel(model);
 }
 
 MainWindow::~MainWindow()

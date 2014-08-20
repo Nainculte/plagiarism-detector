@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QVariant>
 #include "DetectionModuleHolder.h"
+#include "analysisresult.h"
 
 class QDialog;
 
@@ -19,7 +20,7 @@ public:
     virtual bool stopAnalysis(void) = 0;
     virtual bool pauseAnalysis(void) = 0;
     virtual void setSources(QList<QHash<QString, QVariant> >) = 0;
-    virtual QList<QHash<QString, QVariant> > getAnalysisResults(void) = 0;
+    virtual QList<AnalysisResult *> getAnalysisResults(void) = 0;
     virtual void setDelegate(DetectionModuleHolder *delegate) = 0;
 
     static const int started = 0;

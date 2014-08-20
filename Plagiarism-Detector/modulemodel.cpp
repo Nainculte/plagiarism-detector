@@ -1,6 +1,7 @@
 #include "modulemodel.h"
 
 ModuleModel::ModuleModel(QObject *parent)
+    : QAbstractListModel(parent)
 {
 }
 
