@@ -60,9 +60,9 @@ void Basicplugin::setSources(QList<QHash<QString, QVariant> > list)
 QList<AnalysisResult *> Basicplugin::getAnalysisResults()
 {
     results.clear();
-    for (int i = 0; i < 5; ++i)
+    for (int i = 0; i < sources.count(); ++i)
     {
-        for (int j = i + 1; j < 5; ++j)
+        for (int j = i + 1; j < sources.count(); ++j)
         {
             AnalysisResult *res = new AnalysisResult((i+1)*(j+1), QString::number(i), QString::number(j), QHash<QString, QVariant>());
             results << res;
