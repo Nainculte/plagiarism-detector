@@ -2,7 +2,7 @@
 
 TreeNode::TreeNode( const QList<QVariant> &data, TreeNode *parent)
 {
-    dataSet = data;
+    _dataSet = data;
     parentNode = parent;
 }
 
@@ -28,7 +28,7 @@ int TreeNode::nodeCount() const
 
 int TreeNode::columnCount() const
 {
-    return dataSet.count();
+    return _dataSet.count();
 }
 
 int TreeNode::row() const
@@ -40,10 +40,15 @@ int TreeNode::row() const
 
 QVariant TreeNode::data(int column) const
 {
-    return dataSet.value(column);
+    return _dataSet.value(column);
 }
 
 TreeNode * TreeNode::parent() const
 {
     return parentNode;
+}
+
+QList<QVariant> &TreeNode::dataSet()
+{
+    return _dataSet;
 }

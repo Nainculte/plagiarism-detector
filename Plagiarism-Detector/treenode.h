@@ -19,10 +19,12 @@ public:
     QVariant data(int column) const;
     TreeNode *parent() const;
 
+    QList<QVariant> &dataSet();
+
 private:
     TreeNode *parentNode;
     QList<TreeNode *> nodes;
-    QList<QVariant> dataSet;
+    QList<QVariant> _dataSet;
 };
 
 #endif // TREENODE_H

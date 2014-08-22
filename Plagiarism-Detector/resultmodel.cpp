@@ -5,7 +5,6 @@ ResultModel::ResultModel(QList<ModuleResultWrapper> results, int matrixSize, QOb
     QAbstractItemModel(parent), matrixSize(matrixSize)
 {
     QList<QVariant> data;
-    data << "Modules" << "Matrixes";
     root = new TreeNode(data);
     initialize(results);
 }
@@ -47,13 +46,10 @@ Qt::ItemFlags ResultModel::flags(const QModelIndex &index) const
 }
 
 QVariant ResultModel::headerData(int section, Qt::Orientation orientation,
-                               int role) const
+                                 int role) const
 {
-    Q_UNUSED(section)
-    Q_UNUSED(orientation)
-    Q_UNUSED(role)
-//    if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-//        return rootItem->data(section);
+    if (role == Qt::DisplayRole)
+        return root->data(section);
 
     return QVariant();
 }
@@ -128,6 +124,15 @@ void ResultModel::initialize(QList<ModuleResultWrapper> results)
         data << QVariant(wrapper.module()->getModuleInformation());
 
         lists << wrapper.results();
+
+        if (root->dataSet().empty())
+        {
+            root->dataSet() << wrapper.results().at(0)->id1();
+            for (int i = 0; i < matrixSize - 1; ++i)
+            {
+                root->dataSet() << wrapper.results().at(i)->id2();
+            }
+        }
 
         TreeNode *moduleNode = new TreeNode(data, root);
         int offsetx = 0;
