@@ -65,7 +65,7 @@ void ManageModuleDialog::addModule()
                 model->insertRows(0, 1, QModelIndex());
                 QModelIndex index = model->index(0, 0, QModelIndex());
                 model->setData(index, plugin->getModuleInformation(), Qt::EditRole);
-                model->setData(index, QVariant(QMetaType::QObjectStar, plug), Qt::UserRole);
+                model->setData(index, qVariantFromValue(plug), Qt::UserRole);
             }
             else
             {

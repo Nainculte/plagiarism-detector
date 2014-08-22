@@ -2,8 +2,8 @@
 #define BASICPLUGIN_H
 
 #include "basic-plugin_global.h"
-#include "DetectionModuleInterface.h"
-#include "DetectionModuleHolder.h"
+#include "../Plagiarism-Detector/DetectionModuleInterface.h"
+#include <QDialog>
 
 class BASICPLUGINSHARED_EXPORT Basicplugin : public QObject, DetectionModuleInterface
 {
@@ -21,14 +21,14 @@ public:
     virtual bool stopAnalysis(void);
     virtual bool pauseAnalysis(void);
     virtual void setSources(QList<QHash<QString, QVariant> > list);
-    virtual QList<QHash<QString, QVariant> > getAnalysisResults(void);
+    virtual QList<AnalysisResult *> getAnalysisResults(void);
     virtual void setDelegate(DetectionModuleHolder *delegate);
 
 private:
     DetectionModuleHolder *delegate;
     QList<QHash<QString, QVariant> > sources;
     QDialog *parameterForm;
-    QList<QHash<QString, QVariant> > results;
+    QList<AnalysisResult *> results;
 };
 
 class ParameterDialog : public QDialog

@@ -24,6 +24,8 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
+    QModelIndex tableIndexForRow(int row);
+
 private:
 
     TreeNode *root;

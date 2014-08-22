@@ -27,6 +27,9 @@ bool Basicplugin::startAnalysis()
     if (delegate)
     {
         delegate->statusChanged(DetectionModuleInterface::started);
+
+        //to remove here for testing purpose
+        delegate->statusChanged(DetectionModuleInterface::finished);
     }
     return true;
 }
@@ -54,8 +57,18 @@ void Basicplugin::setSources(QList<QHash<QString, QVariant> > list)
     sources = list;
 }
 
-QList<QHash<QString, QVariant> > Basicplugin::getAnalysisResults()
+QList<AnalysisResult *> Basicplugin::getAnalysisResults()
 {
+    results.clear();
+    for (int i = 0; i < 5; ++i)
+    {
+        for (int j = i + 1; j < 5; ++j)
+        {
+            AnalysisResult *res = new AnalysisResult((i+1)*(j+1), QString::number(i), QString::number(j), QHash<QString, QVariant>());
+            results << res;
+        }
+    }
+
     return results;
 }
 

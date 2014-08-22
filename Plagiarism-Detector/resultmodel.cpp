@@ -25,7 +25,17 @@ QVariant ResultModel::data(const QModelIndex &index, int role) const
 
     TreeNode *item = static_cast<TreeNode *>(index.internalPointer());
 
-    return item->data(index.column());
+    QVariant data = item->data(index.column());
+
+    if (data.canConvert(QVariant::String))
+    {
+        return data;
+    }
+    else
+    {
+        AnalysisResult *res = (AnalysisResult *)data.value<void *>();
+        return res->similarity();
+    }
 }
 
 Qt::ItemFlags ResultModel::flags(const QModelIndex &index) const
@@ -99,9 +109,14 @@ int ResultModel::rowCount(const QModelIndex &parent) const
 int ResultModel::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
-        return static_cast<TreeNode*>(parent.internalPointer())->columnCount();
+        return static_cast<TreeNode*>(parent.internalPointer())->getNode(parent.row())->columnCount();
     else
         return root->columnCount();
+}
+
+QModelIndex ResultModel::tableIndexForRow(int row)
+{
+    return index(row, 0);
 }
 
 void ResultModel::initialize(QList<ModuleResultWrapper> results)
@@ -110,22 +125,29 @@ void ResultModel::initialize(QList<ModuleResultWrapper> results)
     QList<QList<AnalysisResult *> >lists;
     foreach (ModuleResultWrapper wrapper, results) {
         QList<QVariant> data;
-        data << QVariant(QMetaType::QObjectStar, wrapper.module());
+        data << QVariant(wrapper.module()->getModuleInformation());
 
         lists << wrapper.results();
 
         TreeNode *moduleNode = new TreeNode(data, root);
+        int offsetx = 0;
         for (int i = 0; i < matrixSize; ++i)
         {
+            offsetx += i + 1;
             QList<QVariant> rowData;
+            int offsety = 0;
             for (int j = 0; j < matrixSize; ++j)
             {
+                offsety += j + 1;
                 if (i == j)
                     rowData << qVariantFromValue((void *)new AnalysisResult());
-                else if (i > j)
-                    rowData << qVariantFromValue((void *)wrapper.results().at(matrixSize * j + i));
-                else
-                    rowData << qVariantFromValue((void *)wrapper.results().at(matrixSize * i + j));
+                else if (i > j) {
+                    int index = (matrixSize * j + i) - offsety;
+                    rowData << qVariantFromValue((void *)wrapper.results().at(index));
+                } else {
+                    int index = (matrixSize * i + j) - offsetx;
+                    rowData << qVariantFromValue((void *)wrapper.results().at(index));
+                }
             }
             TreeNode *rowNode = new TreeNode(rowData, moduleNode);
             moduleNode->addNode(rowNode);

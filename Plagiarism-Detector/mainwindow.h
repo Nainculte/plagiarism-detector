@@ -58,7 +58,7 @@ private:
     QLabel *statusLabel;
     QProgressBar *progressBar;
     QWidget *configuration;
-    QList<QWidget *> *results;
+    QList<QWidget *> results;
     QListView *sourcesListView;
     QListView *modulesListView;
     QPushButton *manageModulesButton;

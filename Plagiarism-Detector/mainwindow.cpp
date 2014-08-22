@@ -212,8 +212,8 @@ void MainWindow::initConfigurationView()
 void MainWindow::createResultView()
 {
     QWidget *result = new QWidget(this);
-    results->append(result);
-    tabWidget->addTab(result, QDateTime::currentDateTime().toString("Result dd/mm/yyyy hh:mm"));
+    results.append(result);
+    tabWidget->addTab(result, "Result " + QDateTime::currentDateTime().toString("dd/mm/yyyy hh:mm"));
 
     QList<ModuleResultWrapper> wrappers;
     foreach (DetectionModuleInterface *module, finishedModules) {
@@ -225,6 +225,13 @@ void MainWindow::createResultView()
                                          this);
     QListView *sideView = new QListView(result);
     sideView->setModel(model);
+    QTableView *tableView = new QTableView(result);
+    tableView->setModel(model);
+    tableView->setRootIndex(model->tableIndexForRow(0));
+    QHBoxLayout *layout = new QHBoxLayout();
+    layout->addWidget(sideView);
+    layout->addWidget(tableView, 2);
+    result->setLayout(layout);
 }
 
 MainWindow::~MainWindow()
@@ -446,7 +453,7 @@ void MainWindow::statusChanged(int newStatus)
         }
         else
         {
-            // create result view
+            createResultView();
             progressBar->setEnabled(false);
             unlockUserInterface();
             analisysRunning = false;
