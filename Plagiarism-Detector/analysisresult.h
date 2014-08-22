@@ -5,6 +5,7 @@
 #include <QList>
 #include <QHash>
 #include <QVariant>
+#include <QBrush>
 
 class AnalysisResult
 {
@@ -20,6 +21,7 @@ public:
     QString id1() const;
     QString id2() const;
     QHash<QString, QVariant> metadata() const;
+    QBrush color() const;
 
 private:
     float _similarity;

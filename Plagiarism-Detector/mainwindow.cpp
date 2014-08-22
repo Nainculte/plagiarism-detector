@@ -10,6 +10,8 @@
 MainWindow::MainWindow()
 {
     tabWidget = new QTabWidget;
+    tabWidget->setTabsClosable(true);
+    connect(tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
     setCentralWidget(tabWidget);
 
     modules = new ModuleModel();
@@ -207,6 +209,11 @@ void MainWindow::initConfigurationView()
     configuration->setLayout(windowLayout);
 
     tabWidget->addTab(configuration, tr("Configuration"));
+
+    if (tabWidget->tabBar()->tabButton(0, QTabBar::RightSide))
+        tabWidget->tabBar()->tabButton(0, QTabBar::RightSide)->resize(0, 0);
+    else
+        tabWidget->tabBar()->tabButton(0, QTabBar::LeftSide)->resize(0, 0);
 }
 
 void MainWindow::createResultView()
@@ -232,6 +239,7 @@ void MainWindow::createResultView()
     layout->addWidget(sideView);
     layout->addWidget(tableView, 2);
     result->setLayout(layout);
+    tabWidget->setCurrentIndex(results.count());
 }
 
 MainWindow::~MainWindow()
@@ -351,7 +359,8 @@ void MainWindow::startResume()
             QMessageBox::warning(this, "Warning", "Add at least a detection module to start");
             return;
         }
-
+        checkedModules.clear();
+        finishedModules.clear();
         for(int i = 0; i < indexes->count(); ++i)
         {
             QModelIndex index = indexes->at(i);
@@ -498,4 +507,16 @@ void MainWindow::unlockUserInterface()
     manageSourcesAct->setEnabled(true);
     deleteSourcesButton->setEnabled(true);
     selectSourcesSkeletonAct->setEnabled(true);
+}
+
+void MainWindow::closeTab(int index)
+{
+    if (index == -1 || index == 0)
+        return;
+
+    QWidget *tab = tabWidget->widget(index);
+    tabWidget->removeTab(index);
+    results.removeAt(index - 1);
+    delete(tab);
+    tab = Q_NULLPTR;
 }

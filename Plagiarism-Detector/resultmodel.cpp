@@ -19,22 +19,41 @@ QVariant ResultModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    if (role != Qt::DisplayRole)
-        return QVariant();
-
-    TreeNode *item = static_cast<TreeNode *>(index.internalPointer());
-
-    QVariant data = item->data(index.column());
-
-    if (data.canConvert(QVariant::String))
+    if (role == Qt::TextAlignmentRole)
     {
-        return data;
+        TreeNode *item = static_cast<TreeNode *>(index.internalPointer());
+        QVariant data = item->data(index.column());
+
+        if (!data.canConvert(QVariant::String))
+            return Qt::AlignRight;
     }
-    else
+    else if (role == Qt::DisplayRole)
     {
-        AnalysisResult *res = (AnalysisResult *)data.value<void *>();
-        return res->similarity();
+        TreeNode *item = static_cast<TreeNode *>(index.internalPointer());
+        QVariant data = item->data(index.column());
+
+        if (data.canConvert(QVariant::String))
+        {
+            return data;
+        }
+        else
+        {
+            AnalysisResult *res = (AnalysisResult *)data.value<void *>();
+            return QString::number(res->similarity()) + "%";
+        }
     }
+    else if (role == Qt::BackgroundRole)
+    {
+        TreeNode *item = static_cast<TreeNode *>(index.internalPointer());
+        QVariant data = item->data(index.column());
+
+        if (!data.canConvert(QVariant::String))
+        {
+            AnalysisResult *res = (AnalysisResult *)data.value<void *>();
+            return res->color();
+        }
+    }
+    return QVariant();
 }
 
 Qt::ItemFlags ResultModel::flags(const QModelIndex &index) const
@@ -48,6 +67,7 @@ Qt::ItemFlags ResultModel::flags(const QModelIndex &index) const
 QVariant ResultModel::headerData(int section, Qt::Orientation orientation,
                                  int role) const
 {
+    Q_UNUSED(orientation)
     if (role == Qt::DisplayRole)
         return root->data(section);
 
@@ -162,7 +182,7 @@ void ResultModel::initialize(QList<ModuleResultWrapper> results)
 
     if (lists.count() > 1) {
         SummaryModule *summary = new SummaryModule();
-
+        summary->summarize(lists);
         QList<QVariant> data;
         data << QVariant(QMetaType::QObjectStar, summary);
         TreeNode *moduleNode = new TreeNode(data, root);

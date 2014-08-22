@@ -39,6 +39,7 @@ private slots:
     void stop();
     void about();
     void documentation();
+    void closeTab(int index);
 
 public slots:
     void configureModule();
