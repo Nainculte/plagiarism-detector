@@ -347,6 +347,11 @@ void MainWindow::selectSourcesSkeleton()
 
 void MainWindow::startResume()
 {
+    if (sources->getSources().count() < 2)
+    {
+        QMessageBox::warning(this, "Warning", "Add at least two source items to compare");
+        return;
+    }
     if (!isPaused)
     {
         // start
