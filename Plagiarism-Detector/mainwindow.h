@@ -41,6 +41,7 @@ private slots:
     void documentation();
     void closeTab(int index);
     void filterToValue(int value);
+    void displayMatrix(QModelIndex index);
 
 public slots:
     void configureModule();

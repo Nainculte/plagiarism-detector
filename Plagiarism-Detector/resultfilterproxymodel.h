@@ -12,6 +12,7 @@ public:
     explicit ResultFilterProxyModel(QObject *parent = 0);
 
     void setFilterValue(int value);
+    void setRootIndex(QModelIndex root);
 
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
@@ -22,7 +23,7 @@ protected:
 private:
 
     int _value;
-
+    QModelIndex rootIndex;
     QStringList headers;
 
 };

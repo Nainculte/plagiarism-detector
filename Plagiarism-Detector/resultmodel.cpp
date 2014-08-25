@@ -184,13 +184,27 @@ void ResultModel::initialize(QList<ModuleResultWrapper> results)
         SummaryModule *summary = new SummaryModule();
         summary->summarize(lists);
         QList<QVariant> data;
-        data << QVariant(QMetaType::QObjectStar, summary);
+        data << summary->getModuleInformation();
         TreeNode *moduleNode = new TreeNode(data, root);
+        int offsetx = 0;
         for (int i = 0; i < matrixSize; ++i)
         {
+            offsetx += i + 1;
             QList<QVariant> rowData;
+            int offsety = 0;
             for (int j = 0; j < matrixSize; ++j)
-                rowData << qVariantFromValue((void *)summary->getAnalysisResults().at(matrixSize * i + j));
+            {
+                offsety += j + 1;
+                if (i == j)
+                    rowData << qVariantFromValue((void *)new AnalysisResult());
+                else if (i > j) {
+                    int index = (matrixSize * j + i) - offsety;
+                    rowData << qVariantFromValue((void *)summary->getAnalysisResults().at(index));
+                } else {
+                    int index = (matrixSize * i + j) - offsetx;
+                    rowData << qVariantFromValue((void *)summary->getAnalysisResults().at(index));
+                }
+            }
             TreeNode *rowNode = new TreeNode(rowData, moduleNode);
             moduleNode->addNode(rowNode);
         }

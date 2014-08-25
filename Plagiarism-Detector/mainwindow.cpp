@@ -233,9 +233,12 @@ void MainWindow::createResultView()
                                          this);
     QListView *sideView = new QListView(result);
     sideView->setModel(model);
+    connect(sideView, SIGNAL(clicked(QModelIndex)), this, SLOT(displayMatrix(QModelIndex)));
+
     QTableView *tableView = new QTableView(result);
     ResultFilterProxyModel *proxy = new ResultFilterProxyModel(result);
     proxy->setSourceModel(model);
+    proxy->setRootIndex(proxy->index(0, 0));
     tableView->setModel(proxy);
     tableView->setRootIndex(proxy->index(0, 0));
     tableView->setObjectName("tableView");
@@ -553,4 +556,12 @@ void MainWindow::filterToValue(int value)
     QTableView *tableview = this->sender()->parent()->findChild<QTableView *>("tableView");
     ResultFilterProxyModel *model = (ResultFilterProxyModel *)tableview->model();
     model->setFilterValue(value);
+}
+
+void MainWindow::displayMatrix(QModelIndex index)
+{
+    QTableView *tableview = this->sender()->parent()->findChild<QTableView *>("tableView");
+    ResultFilterProxyModel *model = (ResultFilterProxyModel *)tableview->model();
+    tableview->setRootIndex(model->index(index.row(), index.column(), index.parent()));
+    model->setRootIndex(tableview->rootIndex());
 }

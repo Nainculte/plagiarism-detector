@@ -68,7 +68,7 @@ void SummaryModule::summarize(QList<QList<AnalysisResult *> >lists)
         {
             avg += list.at(this->list.count())->similarity();
         }
-        avg /= lists.first().count();
+        avg /= lists.count();
         id1 = lists.first().at(list.count())->id1();
         id1 = lists.first().at(list.count())->id2();
         AnalysisResult *average = new AnalysisResult(avg, id1, id2, QHash<QString, QVariant>());

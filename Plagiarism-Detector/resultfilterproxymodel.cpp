@@ -65,17 +65,20 @@ QVariant ResultFilterProxyModel::headerData(int section, Qt::Orientation orienta
     {
         if (orientation == Qt::Horizontal)
         {
-            QModelIndex index = mapToSource(this->index(0, section, this->index(0, 0)));
+            QModelIndex index = mapToSource(this->index(0, section, rootIndex));
             return sourceModel()->headerData(index.column(), orientation, role);
         }
         else
         {
-            QModelIndex index = mapToSource(this->index(section, 0, this->index(0, 0)));
+            QModelIndex index = mapToSource(this->index(section, 0, rootIndex));
             return sourceModel()->headerData(index.row(), orientation, role);
         }
-//        if (headers.empty())
-//            return sourceModel()->headerData(section, orientation, role);
-//        return headers.at(section);
     }
     return QVariant();
+}
+
+
+void ResultFilterProxyModel::setRootIndex(QModelIndex root)
+{
+    rootIndex = root;
 }
