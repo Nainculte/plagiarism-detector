@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     treenode.cpp \
     moduleresultwrapper.cpp \
     analysisresult.cpp \
-    summarymodule.cpp
+    summarymodule.cpp \
+    resultfilterproxymodel.cpp
 
 HEADERS  += mainwindow.h \
     sourcemodel.h \
@@ -37,7 +38,8 @@ HEADERS  += mainwindow.h \
     treenode.h \
     moduleresultwrapper.h \
     analysisresult.h \
-    summarymodule.h
+    summarymodule.h \
+    resultfilterproxymodel.h
 
 FORMS    +=
 

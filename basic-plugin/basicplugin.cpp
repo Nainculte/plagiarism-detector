@@ -64,7 +64,7 @@ QList<AnalysisResult *> Basicplugin::getAnalysisResults()
     {
         for (int j = i + 1; j < sources.count(); ++j)
         {
-            AnalysisResult *res = new AnalysisResult((i+1)*(j+1), QString::number(i), QString::number(j), QHash<QString, QVariant>());
+            AnalysisResult *res = new AnalysisResult(qrand() % 101, QString::number(i), QString::number(j), QHash<QString, QVariant>());
             results << res;
         }
     }

@@ -40,6 +40,7 @@ private slots:
     void about();
     void documentation();
     void closeTab(int index);
+    void filterToValue(int value);
 
 public slots:
     void configureModule();

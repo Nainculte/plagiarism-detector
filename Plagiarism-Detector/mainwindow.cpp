@@ -6,6 +6,7 @@
 #include "quitdialog.h"
 #include "moduleresultwrapper.h"
 #include "resultmodel.h"
+#include "resultfilterproxymodel.h"
 
 MainWindow::MainWindow()
 {
@@ -233,12 +234,31 @@ void MainWindow::createResultView()
     QListView *sideView = new QListView(result);
     sideView->setModel(model);
     QTableView *tableView = new QTableView(result);
-    tableView->setModel(model);
-    tableView->setRootIndex(model->tableIndexForRow(0));
-    QHBoxLayout *layout = new QHBoxLayout();
-    layout->addWidget(sideView);
-    layout->addWidget(tableView, 2);
-    result->setLayout(layout);
+    ResultFilterProxyModel *proxy = new ResultFilterProxyModel(result);
+    proxy->setSourceModel(model);
+    tableView->setModel(proxy);
+    tableView->setRootIndex(proxy->index(0, 0));
+    tableView->setObjectName("tableView");
+    QHBoxLayout *mainLayout = new QHBoxLayout();
+    mainLayout->addWidget(sideView);
+
+    QVBoxLayout *layout = new QVBoxLayout();
+    QHBoxLayout *sliderLayout = new QHBoxLayout();
+    QSlider *slider = new QSlider(Qt::Horizontal, result);
+    connect(slider, SIGNAL(valueChanged(int)), this, SLOT(filterToValue(int)));
+    slider->setMinimum(0);
+    slider->setMaximum(100);
+    slider->setValue(0);
+    QLabel *sliderLabel = new QLabel("0%", result);
+    sliderLabel->setObjectName("label");
+    sliderLayout->addWidget(slider, 1);
+    sliderLayout->addWidget(sliderLabel, 0, Qt::AlignRight);
+    QLabel *label = new QLabel("Filter result under the selected percentage", result);
+    layout->addWidget(label);
+    layout->addLayout(sliderLayout);
+    layout->addWidget(tableView);
+    mainLayout->addLayout(layout, 2);
+    result->setLayout(mainLayout);
     tabWidget->setCurrentIndex(results.count());
 }
 
@@ -524,4 +544,13 @@ void MainWindow::closeTab(int index)
     results.removeAt(index - 1);
     delete(tab);
     tab = Q_NULLPTR;
+}
+
+void MainWindow::filterToValue(int value)
+{
+    QLabel *label = this->sender()->parent()->findChild<QLabel *>("label");
+    label->setText(QString::number(value) + "%");
+    QTableView *tableview = this->sender()->parent()->findChild<QTableView *>("tableView");
+    ResultFilterProxyModel *model = (ResultFilterProxyModel *)tableview->model();
+    model->setFilterValue(value);
 }
