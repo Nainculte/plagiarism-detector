@@ -57,6 +57,7 @@ void ResultFilterProxyModel::setFilterValue(int value)
 {
     _value = value;
     invalidateFilter();
+
 }
 
 QVariant ResultFilterProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -77,6 +78,33 @@ QVariant ResultFilterProxyModel::headerData(int section, Qt::Orientation orienta
     return QVariant();
 }
 
+QVariant ResultFilterProxyModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid())
+        return QVariant();
+
+    if (role == Qt::TextAlignmentRole)
+    {
+        return QSortFilterProxyModel::data(index, role);
+    }
+    else if (role == Qt::DisplayRole)
+    {
+        return QSortFilterProxyModel::data(index, role);
+    }
+    else if (role == Qt::BackgroundRole)
+    {
+        QModelIndex sourceIndex = mapToSource(this->index(index.row(), index.column(), rootIndex));
+        TreeNode *item = static_cast<TreeNode *>(sourceIndex.internalPointer());
+        QVariant data = item->data(sourceIndex.column());
+
+        if (!data.canConvert(QVariant::String))
+        {
+            AnalysisResult *res = (AnalysisResult *)data.value<void *>();
+            return res->color(_value);
+        }
+    }
+    return QVariant();
+}
 
 void ResultFilterProxyModel::setRootIndex(QModelIndex root)
 {
