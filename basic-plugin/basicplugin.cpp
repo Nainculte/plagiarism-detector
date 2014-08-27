@@ -1,5 +1,8 @@
 #include "basicplugin.h"
-
+#include <QLabel>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 Basicplugin::Basicplugin()
 {
@@ -81,4 +84,13 @@ void Basicplugin::setDelegate(DetectionModuleHolder *delegate)
 ParameterDialog::ParameterDialog(QWidget *parent) : QDialog(parent)
 {
 
+    QLabel *label = new QLabel("This module does not have specific parameters.");
+    QPushButton *button = new QPushButton("Ok");
+    connect(button, SIGNAL(clicked()), this, SLOT(accept()));
+
+    QVBoxLayout *layout = new QVBoxLayout();
+    layout->addWidget(label);
+    layout->addWidget(button, 0, Qt::AlignRight);
+    setLayout(layout);
+    setWindowTitle("Parameters window");
 }

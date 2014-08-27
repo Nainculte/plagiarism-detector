@@ -28,6 +28,7 @@ private:
 private slots:
     void addModule();
     void deleteModule();
+    void configureModule();
 
 };
 
