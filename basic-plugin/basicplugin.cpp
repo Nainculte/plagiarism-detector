@@ -42,6 +42,8 @@ bool Basicplugin::startAnalysis()
                 QFile origin(it.peekNext()["fileName"].toString());
                 QListIterator<QHash<QString, QVariant> > fromOrigin(it);
 
+                if (fromOrigin.hasNext())
+                    fromOrigin.next();
                 while (fromOrigin.hasNext())
                 {
                     if (fromOrigin.peekNext()["checked"] == true && fromOrigin.peekNext()["file"] == true)
