@@ -21,7 +21,7 @@ public:
     QString id1() const;
     QString id2() const;
     QHash<QString, QVariant> metadata() const;
-    QBrush color() const;
+    QBrush color(int value) const;
 
 private:
     float _similarity;

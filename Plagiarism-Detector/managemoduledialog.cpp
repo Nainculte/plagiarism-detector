@@ -38,7 +38,7 @@ ManageModuleDialog::ManageModuleDialog(QWidget *parent, ModuleModel *model) :
     connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
     connect(addModuleButton, SIGNAL(clicked()), this, SLOT(addModule()));
     connect(deleteModuleButton, SIGNAL(clicked()), this, SLOT(deleteModule()));
-    connect(configureModuleButton, SIGNAL(clicked()), parent, SLOT(configureModule()));
+    connect(configureModuleButton, SIGNAL(clicked()), this, SLOT(configureModule()));
 
     setLayout(windowLayout);
     setWindowTitle(tr("Manage Modules"));
@@ -86,5 +86,16 @@ void ManageModuleDialog::deleteModule()
 
     foreach (QModelIndex index, indexes) {
         model->removeRows(index.row(), 1, QModelIndex());
+    }
+}
+
+void ManageModuleDialog::configureModule()
+{
+    QModelIndexList indexes = listView->selectionModel()->selectedIndexes();
+    if (indexes.size())
+    {
+        QObject *obj = qvariant_cast<QObject *>(model->data(indexes.first(), Qt::UserRole));
+        DetectionModuleInterface *module = qobject_cast<DetectionModuleInterface *>(obj);
+        module->getParameterForm().exec();
     }
 }

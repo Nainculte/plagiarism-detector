@@ -557,6 +557,7 @@ void MainWindow::filterToValue(int value)
     QTableView *tableview = this->sender()->parent()->findChild<QTableView *>("tableView");
     ResultFilterProxyModel *model = (ResultFilterProxyModel *)tableview->model();
     model->setFilterValue(value);
+    tableview->viewport()->repaint();
 }
 
 void MainWindow::displayMatrix(QModelIndex index)

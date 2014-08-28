@@ -15,6 +15,7 @@ public:
     void setRootIndex(QModelIndex root);
 
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    QVariant data(const QModelIndex &index, int role) const;
 
 protected:
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;

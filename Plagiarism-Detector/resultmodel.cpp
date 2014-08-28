@@ -50,7 +50,7 @@ QVariant ResultModel::data(const QModelIndex &index, int role) const
         if (!data.canConvert(QVariant::String))
         {
             AnalysisResult *res = (AnalysisResult *)data.value<void *>();
-            return res->color();
+            return res->color(0);
         }
     }
     return QVariant();

@@ -46,8 +46,10 @@ QHash<QString, QVariant> AnalysisResult::metadata() const
     return _metadata;
 }
 
-QBrush AnalysisResult::color() const
+QBrush AnalysisResult::color(int value) const
 {
+    if (_similarity < value)
+        return QBrush(QColor(255, 255, 255));
     if (_similarity < 50.0)
     {
         return QBrush(QColor(255, 255, 255 - (_similarity * 255) / 50));
