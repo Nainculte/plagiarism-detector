@@ -1,6 +1,7 @@
 #ifndef BASICPLUGIN_H
 #define BASICPLUGIN_H
 
+#include <QFile>
 #include "basic-plugin_global.h"
 #include "../Plagiarism-Detector/DetectionModuleInterface.h"
 #include <QDialog>
@@ -23,6 +24,9 @@ public:
     virtual void setSources(QList<QHash<QString, QVariant> > list);
     virtual QList<AnalysisResult *> getAnalysisResults(void);
     virtual void setDelegate(DetectionModuleHolder *delegate);
+
+private:
+    float compareFiles(QFile &ori, QFile &o);
 
 private:
     DetectionModuleHolder *delegate;

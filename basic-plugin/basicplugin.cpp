@@ -1,3 +1,5 @@
+#include <QFile>
+#include <QTextStream>
 #include "basicplugin.h"
 
 
@@ -26,12 +28,77 @@ bool Basicplugin::startAnalysis()
 {
     if (delegate)
     {
+        if (sources.size() == 0)
+            return false;
         delegate->statusChanged(DetectionModuleInterface::started);
+        QListIterator<QHash<QString, QVariant> > it(sources);
+        while (it.hasNext())
+        {
+            if (it.peekNext()["checked"] == true && it.peekNext()["file"] == true)
+            {
+                QFile origin(it.peekNext()["fileName"].toString());
+                QListIterator<QHash<QString, QVariant> > fromOrigin(it);
 
+                while (fromOrigin.hasNext())
+                {
+                    if (fromOrigin.peekNext()["checked"] == true && fromOrigin.peekNext()["file"] == true)
+                    {
+                        float res = 0;
+                        QFile compared(fromOrigin.peekNext()["fileName"].toString());
+                        if (origin.open(QIODevice::ReadOnly))
+                        {
+                            if (compared.open(QIODevice::ReadOnly))
+                            {
+                                res = this->compareFiles(origin, compared);
+                                compared.close();
+                            }
+                            origin.close();
+                        }
+                        results.push_back(new AnalysisResult(res, it.peekNext()["fileName"].toString(),
+                                            fromOrigin.peekNext()["filenNme"].toString(), QHash<QString, QVariant >()));
+                    }
+                    fromOrigin.next();
+                }
+            }
+            it.next();
+        }
         //to remove here for testing purpose
         delegate->statusChanged(DetectionModuleInterface::finished);
     }
     return true;
+}
+
+float Basicplugin::compareFiles(QFile &ori, QFile &o)
+{
+    QTextStream oriIn(&ori);
+    QTextStream oIn(&o);
+    QList<QString> compared;
+    int oriTotal = 0;
+    int oTotal = 0;
+    int matched = 0;
+
+    while (!oIn.atEnd())
+    {
+       compared.push_back(oIn.readLine());
+       ++oTotal;
+    }
+
+    while (!oriIn.atEnd())
+    {
+        QString line = oriIn.readLine();
+        ++oriTotal;
+        QListIterator<QString> it(compared);
+        while (it.hasNext())
+        {
+            if (it.next() == line)
+            {
+                ++matched;
+                break;
+            }
+        }
+    }
+    float result = ((float)matched * 100) / ((float)oriTotal + (float)oTotal);
+    return result;
 }
 
 bool Basicplugin::stopAnalysis()
@@ -59,6 +126,7 @@ void Basicplugin::setSources(QList<QHash<QString, QVariant> > list)
 
 QList<AnalysisResult *> Basicplugin::getAnalysisResults()
 {
+    return results;
     results.clear();
     for (int i = 0; i < sources.count(); ++i)
     {

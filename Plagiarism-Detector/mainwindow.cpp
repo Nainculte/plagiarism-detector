@@ -18,6 +18,7 @@ MainWindow::MainWindow()
     modules = new ModuleModel();
     sources = new SourceModel();
 
+    analisysRunning = false;
     isPaused = false;
 
     createActions();
