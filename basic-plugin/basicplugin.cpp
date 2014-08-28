@@ -1,5 +1,6 @@
 #include <QFile>
 #include <QTextStream>
+#include <QFileInfo>
 #include "basicplugin.h"
 #include <QLabel>
 #include <QPushButton>
@@ -59,8 +60,8 @@ bool Basicplugin::startAnalysis()
                             }
                             origin.close();
                         }
-                        results.push_back(new AnalysisResult(res, it.peekNext()["fileName"].toString(),
-                                            fromOrigin.peekNext()["filenNme"].toString(), QHash<QString, QVariant >()));
+                        results.push_back(new AnalysisResult(res, QFileInfo(it.peekNext()["fileName"].toString()).fileName(),
+                                            QFileInfo(fromOrigin.peekNext()["fileName"].toString()).fileName(), QHash<QString, QVariant >()));
                     }
                     fromOrigin.next();
                 }
